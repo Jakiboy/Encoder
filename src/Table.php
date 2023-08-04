@@ -15,10 +15,10 @@ namespace Encoding;
  */
 final class Table
 {
-	/**
-	 * @access public
-	 * @var array WINDOWS1252, Windows-1252 (CP1252) to UTF-8
-	 */
+    /**
+     * @access public
+     * @var array WINDOWS1252, Windows-1252 (CP1252) to UTF-8
+     */
     public const WINDOWS1252 = [
         128 => "\xe2\x82\xac",
         130 => "\xe2\x80\x9a",
@@ -50,9 +50,9 @@ final class Table
     ];
 
     /**
-	 * @access public
-	 * @var array UTF8, UTF-8 to Windows-1252
-	 */
+     * @access public
+     * @var array UTF8, UTF-8 to Windows-1252
+     */
     public const UTF8 = [
         "\xe2\x82\xac" => "\x80",
         "\xe2\x80\x9a" => "\x82",
@@ -84,9 +84,9 @@ final class Table
     ];
 
     /**
-	 * @access public
-	 * @var array BROKEN, Broken UTF-8 to UTF-8
-	 */
+     * @access public
+     * @var array BROKEN, Broken UTF-8 to UTF-8
+     */
     public const BROKEN = [
         "\xc2\x80" => "\xe2\x82\xac",
         "\xc2\x82" => "\xe2\x80\x9a",
@@ -115,5 +115,14 @@ final class Table
         "\xc2\x9c" => "\xc5\x93",
         "\xc2\x9e" => "\xc5\xbe",
         "\xc2\x9f" => "\xc5\xb8"
+    ];
+
+    /**
+     * @access public
+     * @var array SPECIAL, Special UTF-8 chars
+     */
+    public const SPECIAL = [
+        "\xe2\x80\x99" => "\x27",
+        "\xc2\xb4"     => "\x27"
     ];
 }

@@ -16,37 +16,55 @@ namespace Encoding;
  */
 class Encoder
 {
-	/**
-	 * @access protected
-	 * @var bool $useIconv
-	 * @var mixed $iconvOption
-	 */
+    /**
+     * @access protected
+     * @var bool $useSpecial
+     * @var bool $useIconv
+     * @var mixed $iconvOption
+     */
+    protected $useSpecial = true;
     protected $useIconv = false;
     protected $iconvOption = false;
 
     /**
-	 * Init encoder.
-	 * 
-	 * @param bool $useIconv
-	 * @param mixed $iconvOption
-	 */
+     * Init encoder.
+     * 
+     * @param bool $useIconv
+     * @param mixed $iconvOption
+     */
     public function __construct(bool $useIconv = false, $iconvOption = false)
     {
         $this->useIconv = $useIconv;
         if ( is_string($iconvOption) ) {
-            $this->iconvOption = str_replace('//', '', strtoupper($iconvOption));
+            $iconvOption = str_replace('//', '', strtoupper($iconvOption));
+            $this->iconvOption = str_replace('|', '//', $iconvOption);
         }
     }
 
     /**
-	 * Convert string encoding.
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @param string $to
-	 * @param string $from
-	 * @return string
-	 */
+     * Disable special UTF-8 converting.
+     * 
+     * @access public
+     * @param string $string
+     * @param string $to
+     * @param string $from
+     * @return string
+     */
+    public function noSpecial() : self
+    {
+        $this->useSpecial = false;
+        return $this;
+    }
+
+    /**
+     * Convert string encoding.
+     * 
+     * @access public
+     * @param string $string
+     * @param string $to
+     * @param string $from
+     * @return string
+     */
     public function convert(string $string, string $to, string $from = 'ISO-8859-1') : string
     {
         $to   = $this->formatEncoding($to);
@@ -71,12 +89,12 @@ class Encoder
     }
 
     /**
-	 * Sanitize UTF-8 string.
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @return string
-	 */
+     * Sanitize UTF-8 string.
+     * 
+     * @access public
+     * @param string $string
+     * @return string
+     */
     public function sanitize(string $string) : string
     {
         $last = '';
@@ -89,13 +107,13 @@ class Encoder
     }
     
     /**
-	 * Encode UTF-8 string.
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @param string $from
-	 * @return string
-	 */
+     * Encode UTF-8 string.
+     * 
+     * @access public
+     * @param string $string
+     * @param string $from
+     * @return string
+     */
     public function encodeUtf8(string $string, string $from = 'ISO-8859-1') : string
     {
         $from = $this->formatEncoding($from);
@@ -103,13 +121,13 @@ class Encoder
     }
 
     /**
-	 * Decode UTF-8 string.
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @param string $to
-	 * @return string
-	 */
+     * Decode UTF-8 string.
+     * 
+     * @access public
+     * @param string $string
+     * @param string $to
+     * @return string
+     */
     public function decodeUtf8(string $string, string $to = 'ISO-8859-1') : string
     {
         // Using converter
@@ -125,12 +143,12 @@ class Encoder
     }
 
     /**
-	 * Convert string to UTF-8.
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @return string
-	 */
+     * Convert string to UTF-8.
+     * 
+     * @access public
+     * @param string $string
+     * @return string
+     */
     public function toUtf8(string $string) : string
     {
         $max = $this->getLength($string);
@@ -209,42 +227,47 @@ class Encoder
             }
         }
 
+        // Convert special UTF-8
+        if ( $this->useSpecial ) {
+            $tmp = $this->convertSpecial($tmp);
+        }
+
         return $tmp;
     }
 
     /**
-	 * Convert string to Windows-1252,
+     * Convert string to Windows-1252,
      * [Alias].
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @return string
-	 */
+     * 
+     * @access public
+     * @param string $string
+     * @return string
+     */
     public function toWindows1252(string $string) : string
     {
         return $this->decodeUtf8($string);
     }
 
     /**
-	 * Convert string to Latin-1,
+     * Convert string to Latin-1,
      * [Alias].
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @return string
-	 */
+     * 
+     * @access public
+     * @param string $string
+     * @return string
+     */
     public function toLatin1(string $string) : string
     {
         return $this->decodeUtf8($string);
     }
 
     /**
-	 * Remove BOM from UTF-8.
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @return string
-	 */
+     * Remove BOM from UTF-8.
+     * 
+     * @access public
+     * @param string $string
+     * @return string
+     */
     public static function unBom(string $string) : string
     {
         if ( substr($string, 0, 3) == pack('CCC', 0xef, 0xbb, 0xbf) ) {
@@ -254,12 +277,12 @@ class Encoder
     }
 
     /**
-	 * Fix broken UTF-8 string.
-	 * 
-	 * @access public
-	 * @param string $string
-	 * @return string
-	 */
+     * Fix broken UTF-8 string.
+     * 
+     * @access public
+     * @param string $string
+     * @return string
+     */
     public static function unbreak(string $string) : string
     {
         $search  = array_keys(Table::BROKEN);
@@ -268,12 +291,12 @@ class Encoder
     }
 
     /**
-	 * Check Windows-1252 chars table.
-	 * 
-	 * @access protected
-	 * @param string $string
-	 * @return bool
-	 */
+     * Check Windows-1252 chars table.
+     * 
+     * @access protected
+     * @param string $string
+     * @return bool
+     */
     protected function isWindows1252(string $string) : bool
     {
         $n = $this->toInt($string);
@@ -281,12 +304,12 @@ class Encoder
     }
 
     /**
-	 * Convert Windows-1252 chars to UTF-8 using table.
-	 *
-	 * @access protected
-	 * @param string $string
-	 * @return string
-	 */
+     * Convert Windows-1252 chars to UTF-8 using table.
+     *
+     * @access protected
+     * @param string $string
+     * @return string
+     */
     protected function convertWindows1252(string $string) : string
     {
         $n = $this->toInt($string);
@@ -294,12 +317,12 @@ class Encoder
     }
 
     /**
-	 * Convert UTF-8 chars to Windows-1252 using table.
-	 *
-	 * @access protected
-	 * @param string $string
-	 * @return string
-	 */
+     * Convert UTF-8 chars to Windows-1252 using table.
+     *
+     * @access protected
+     * @param string $string
+     * @return string
+     */
     protected function convertUtf8(string $string) : string
     {
         $search  = array_keys(Table::UTF8);
@@ -308,12 +331,26 @@ class Encoder
     }
 
     /**
-	 * Convert char to UTF-8.
-	 *
-	 * @access protected
-	 * @param string $string
-	 * @return string
-	 */
+     * Convert special UTF-8 string using table.
+     * 
+     * @access protected
+     * @param string $string
+     * @return string
+     */
+    protected function convertSpecial(string $string) : string
+    {
+        $search  = array_keys(Table::SPECIAL);
+        $replace = array_values(Table::SPECIAL);
+        return str_replace($search, $replace, $string);
+    }
+
+    /**
+     * Convert char to UTF-8.
+     *
+     * @access protected
+     * @param string $string
+     * @return string
+     */
     protected function convertChar(string $string) : string
     {
         $char1 = (chr(ord($string) / 64) | "\xc0");
@@ -322,24 +359,24 @@ class Encoder
     }
 
     /**
-	 * Convert the first byte of a string to a value between 0 and 255.
-	 *
-	 * @access protected
-	 * @param string $string
-	 * @return int
-	 */
+     * Convert the first byte of a string to a value between 0 and 255.
+     *
+     * @access protected
+     * @param string $string
+     * @return int
+     */
     protected function toInt(string $string) : int
     {
         return ord($string);
     }
 
     /**
-	 * Get string length.
-	 *
-	 * @access protected
-	 * @param string $string
-	 * @return int
-	 */
+     * Get string length.
+     *
+     * @access protected
+     * @param string $string
+     * @return int
+     */
     protected function getLength(string $string) : int
     {
         // Using multibyte
@@ -350,84 +387,84 @@ class Encoder
     }
 
     /**
-	 * Maybe require UTF-8 converting.
-	 *
-	 * @access protected
-	 * @param string $char
-	 * @return bool
-	 */
+     * Maybe require UTF-8 converting.
+     *
+     * @access protected
+     * @param string $char
+     * @return bool
+     */
     protected function maybeRequireConverting(string $char) : bool
     {
         return ($char >= "\xc0");
     }
 
     /**
-	 * Require UTF-8 converting.
-	 *
-	 * @access protected
-	 * @param string $char
-	 * @return bool
-	 */
+     * Require UTF-8 converting.
+     *
+     * @access protected
+     * @param string $char
+     * @return bool
+     */
     protected function requireConverting(string $char) : bool
     {
         return (($char & "\xc0") == "\x80");
     }
 
     /**
-	 * Check valid UTF-8 bytes.
-	 *
-	 * @access protected
-	 * @param string $char
-	 * @return bool
-	 */
+     * Check valid UTF-8 bytes.
+     *
+     * @access protected
+     * @param string $char
+     * @return bool
+     */
     protected function isValidBytes(string $char) : bool
     {
         return ($char >= "\x80" && $char <= "\xbf");
     }
 
     /**
-	 * Maybe 2 bytes UTF-8.
-	 *
-	 * @access protected
-	 * @param string $char
-	 * @return bool
-	 */
+     * Maybe 2 bytes UTF-8.
+     *
+     * @access protected
+     * @param string $char
+     * @return bool
+     */
     protected function maybe2Bytes(string $char) : bool
     {
         return ($char >= "\xc0" & $char <= "\xdf");
     }
 
     /**
-	 * Maybe 3 bytes UTF-8.
-	 *
-	 * @access protected
-	 * @param string $char
-	 * @return bool
-	 */
+     * Maybe 3 bytes UTF-8.
+     *
+     * @access protected
+     * @param string $char
+     * @return bool
+     */
     protected function maybe3Bytes(string $char) : bool
     {
         return ($char >= "\xe0" & $char <= "\xef");
     }
 
     /**
-	 * Maybe 4 bytes UTF-8.
-	 *
-	 * @access protected
-	 * @param string $char
-	 * @return bool
-	 */
+     * Maybe 4 bytes UTF-8.
+     *
+     * @access protected
+     * @param string $char
+     * @return bool
+     */
     protected function maybe4Bytes(string $char) : bool
     {
         return ($char >= "\xf0" & $char <= "\xf7");
     }
 
     /**
-	 * Format encoding.
-	 *
-	 * @access protected
-	 * @param string $encoding
-	 * @return string
-	 */
+     * Format encoding.
+     *
+     * @access protected
+     * @param string $encoding
+     * @return string
+     */
     protected function formatEncoding(string $encoding) : string
     {
         $encoding = strtoupper($encoding);
