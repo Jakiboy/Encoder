@@ -1,2 +1,2 @@
 # Encoder
-PHP Class Encoding Helper |  Upgrade of https://github.com/neitanod/forceutf8
+PHP String Encoding Helper (UTF-8) | Upgrade of https://github.com/neitanod/forceutf8

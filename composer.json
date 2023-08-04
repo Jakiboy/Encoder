@@ -1,0 +1,28 @@
+{
+  "name":"jakiboy/encoder",
+  "version":"1.0.0",
+  "type":"library",
+  "description":"PHP String Encoding Helper (UTF-8)",
+  "keywords":[
+    "Encoder",
+    "Strings",
+    "UTF-8"
+  ],
+  "homepage":"https://jakiboy.github.io/Encoder/",
+  "license":"MIT",
+  "authors":[
+    {
+      "name":"Jihad Sinnaour",
+      "email":"mail@jihadsinnaour.com",
+      "role":"Founder"
+    }
+  ],
+  "require":{
+    "php":">=7.2.5"
+  },
+  "autoload":{
+    "psr-4":{
+      "Encoding\\":"src/"
+    }
+  }
+}
