@@ -152,7 +152,7 @@ class Encoder
 
                     // Valid UTF-8
                     if ( $this->isValidBytes($c2) ) {
-                        $tmp .= $c1 . $c2;
+                        $tmp .= "{$c1}{$c2}";
                         $i++;
                     
                     // Convert char to UTF-8
@@ -165,8 +165,8 @@ class Encoder
 
                     // Valid UTF-8
                     if ( $this->isValidBytes($c2) && $this->isValidBytes($c3) ) {
-                        $tmp .= $c1 . $c2 . $c3;
-                        $i = $i + 2;
+                        $tmp .= "{$c1}{$c2}{$c3}";
+                        $i += 2;
                     
                     // Convert char to UTF-8
                     } else {
@@ -178,8 +178,8 @@ class Encoder
 
                     // Valid UTF-8
                     if ( $this->isValidBytes($c2) && $this->isValidBytes($c3) && $this->isValidBytes($c4) ) {
-                        $tmp .= $c1 . $c2 . $c3 . $c4;
-                        $i = $i + 3;
+                        $tmp .= "{$c1}{$c2}{$c3}{$c4}";
+                        $i += 3;
                     
                     // Convert char to UTF-8
                     } else {
