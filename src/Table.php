@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : Encoder
- * @version   : 1.0.0
+ * @version   : 1.0.1
  * @copyright : (c) 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link      : https://jakiboy.github.io/utf8/
  * @license   : MIT
