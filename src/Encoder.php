@@ -2,9 +2,9 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : Encoder
- * @version   : 1.0.1
+ * @version   : 1.0.2
  * @copyright : (c) 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
- * @link      : https://jakiboy.github.io/utf8/
+ * @link      : https://jakiboy.github.io/Encoder/
  * @license   : MIT
  */
 
@@ -431,7 +431,7 @@ class Encoder
      */
     protected function maybe2Bytes(string $char) : bool
     {
-        return ($char >= "\xc0" & $char <= "\xdf");
+        return ($char >= "\xc0" && $char <= "\xdf");
     }
 
     /**
@@ -443,7 +443,7 @@ class Encoder
      */
     protected function maybe3Bytes(string $char) : bool
     {
-        return ($char >= "\xe0" & $char <= "\xef");
+        return ($char >= "\xe0" && $char <= "\xef");
     }
 
     /**
@@ -455,7 +455,7 @@ class Encoder
      */
     protected function maybe4Bytes(string $char) : bool
     {
-        return ($char >= "\xf0" & $char <= "\xf7");
+        return ($char >= "\xf0" && $char <= "\xf7");
     }
 
     /**
