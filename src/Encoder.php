@@ -2,7 +2,7 @@
 /**
  * @author    : JIHAD SINNAOUR
  * @package   : Encoder
- * @version   : 1.0.2
+ * @version   : 1.0.3
  * @copyright : (c) 2023 Jihad Sinnaour <mail@jihadsinnaour.com>
  * @link      : https://jakiboy.github.io/Encoder/
  * @license   : MIT
@@ -288,6 +288,22 @@ class Encoder
         $search  = array_keys(Table::BROKEN);
         $replace = array_values(Table::BROKEN);
         return str_replace($search, $replace, $string);
+    }
+
+    /**
+     * Detect string encoding.
+     *
+     * @access public
+     * @param string $string
+     * @param mixed $encodings
+     * @return mixed
+     */
+    public static function detect(string $string, $encodings = null)
+    {
+        if ( function_exists('mb_detect_encoding') ) {
+            return mb_detect_encoding($string, $encodings, true);
+        }
+        return false;
     }
 
     /**
